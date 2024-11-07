@@ -11,11 +11,11 @@ public interface ScheduleService {
 
     List<ScheduleResponseDto> findAllSchedules();
 
-    ScheduleResponseDto findScheduleById(Long Schedule);
+    ScheduleResponseDto findScheduleById(Long scheduleId);
 
-    ScheduleResponseDto updateSchedule(Long Schedule, String writer, String content);
+    ScheduleResponseDto updateSchedule(Long scheduleId, String writer, String content);
 
-    void deleteSchedule(Long Schedule);
+    void deleteSchedule(Long scheduleId);
 
 
 }

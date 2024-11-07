@@ -9,7 +9,7 @@ import java.util.Date;
 @AllArgsConstructor
 public class ScheduleResponseDto {
 
-    private Long schedule;
+    private Long scheduleId;
     private Long userId;
     private String password;
     private Date reg_date;
