@@ -1,5 +1,6 @@
 package com.example.springscheduler.dto;
 
+import com.example.springscheduler.entity.Schedule;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -10,11 +11,15 @@ import java.util.Date;
 public class ScheduleResponseDto {
 
     private Long scheduleId;
-    private Long userId;
-    private String password;
-    private Date reg_date;
+
     private String content;
-    private Date update_date;
+
     private String writer;
+
+    public ScheduleResponseDto(Schedule schedule) {
+        this.scheduleId = schedule.getScheduleId();
+        this.writer = schedule.getWriter();
+        this.content = schedule.getContent();
+    }
 
 }
