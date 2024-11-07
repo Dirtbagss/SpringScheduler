@@ -10,14 +10,14 @@ import java.util.Date;
 public class Schedule {
 
     private Long schedule;
-    private String userId;
+    private Long userId;
     private String password;
     private Date reg_date;
     private String content;
     private Date update_date;
     private String writer;
 
-    public Schedule(String userId, String password, String content, String writer) {
+    public Schedule(Long userId, String password, String content, String writer) {
         this.userId = userId;
         this.password = password;
         this.content = content;
