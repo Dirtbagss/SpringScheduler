@@ -3,21 +3,18 @@ package com.example.springscheduler.entity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 @Getter
 @AllArgsConstructor
 public class Schedule {
 
     private Long scheduleId;
+    private Long userId;
+    private String password;
     private String content;
     private String writer;
-
-    public Schedule(String content, String writer) {
-
-        this.content = content;
-        this.writer = writer;
-    }
+    private Timestamp update_date;
 
 
     public void update(String writer, String content) {

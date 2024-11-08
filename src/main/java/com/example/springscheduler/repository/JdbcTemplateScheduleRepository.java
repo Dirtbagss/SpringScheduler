@@ -14,10 +14,9 @@ import org.springframework.web.server.ResponseStatusException;
 import javax.sql.DataSource;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
+import java.util.*;
 
 @Repository
 public class JdbcTemplateScheduleRepository implements ScheduleRepository {
@@ -32,25 +31,26 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository {
             SimpleJdbcInsert jdbcInsert = new SimpleJdbcInsert(this.jdbcTemplate);
             jdbcInsert.withTableName("schedule").usingGeneratedKeyColumns("scheduleId");
 
+            LocalDateTime currentDateTime = LocalDateTime.now();
+            Timestamp timestamp = Timestamp.valueOf(currentDateTime);
+
             Map<String, Object> parameters = new HashMap<>();
+            parameters.put("userId", schedule.getUserId());
+            parameters.put("password", schedule.getPassword());
             parameters.put("writer", schedule.getWriter());
             parameters.put("content", schedule.getContent());
+            parameters.put("update_date", timestamp);
+
 
             Number key = jdbcInsert.executeAndReturnKey(new MapSqlParameterSource(parameters));
 
-            return new ScheduleResponseDto(key.longValue(), schedule.getWriter(), schedule.getContent());
+            return new ScheduleResponseDto(key.longValue(), schedule.getUserId(), schedule.getPassword(), schedule.getWriter(), schedule.getContent(),timestamp);
 
         }
 
         @Override
-        public List<ScheduleResponseDto> findAllSchedules() { return jdbcTemplate.query("SELECT * FROM SCHEDULE", scheduleRowMapper());}
+        public List<ScheduleResponseDto> findAllSchedules() { return jdbcTemplate.query("SELECT * FROM SCHEDULE ORDER BY UPDATE_DATE DESC", scheduleRowMapper());}
 
-        @Override
-        public Optional<Schedule> findScheduleById(Long scheduleId){
-            List<Schedule> result = jdbcTemplate.query("SELECT * FROM SCHEDULE WHERE scheduleId = ?", scheduleRowMapperV2(), scheduleId);
-
-            return result.stream().findAny();
-        }
 
         @Override
         public Schedule  findScheduleByScheduleIdByIdOrElseThrow(Long scheduleId){
@@ -71,7 +71,7 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository {
 
     @Override
     public int deleteSchedule(Long scheduleId) {
-        return jdbcTemplate.update("delete from memo where scheduleId = ?", scheduleId);
+        return jdbcTemplate.update("delete from SCHEDULE where scheduleId = ?", scheduleId);
     }
 
 
@@ -85,8 +85,11 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository {
             public ScheduleResponseDto mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return new ScheduleResponseDto(
                         rs.getLong("scheduleId"),
+                        rs.getLong("userId"),
+                        rs.getString("password"),
                         rs.getString("writer"),
-                        rs.getString("content")
+                        rs.getString("content"),
+                        rs.getTimestamp("update_date")
                 );
             }
 
@@ -99,8 +102,11 @@ public class JdbcTemplateScheduleRepository implements ScheduleRepository {
             public Schedule mapRow(ResultSet rs, int rowNum) throws SQLException {
                 return new Schedule(
                         rs.getLong("scheduleId"),
+                        rs.getLong("userId"),
+                        rs.getString("password"),
                         rs.getString("writer"),
-                        rs.getString("content")
+                        rs.getString("content"),
+                        rs.getTimestamp("update_date")
                 );
             }
 

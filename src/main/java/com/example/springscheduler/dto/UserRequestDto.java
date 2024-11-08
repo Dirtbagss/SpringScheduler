@@ -4,15 +4,12 @@ import lombok.Getter;
 
 import java.sql.Timestamp;
 
-
 @Getter
-public class ScheduleRequestDto {
+public class UserRequestDto {
 
-    private Long scheduleId;
     private Long userId;
-    private String password;
-    private String content;
-    private String writer;
+    private String userName;
+    private String email;
+    private Timestamp reg_date;
     private Timestamp update_date;
-
 }

@@ -21,7 +21,7 @@ public class ScheduleServiceImpl implements ScheduleService {
     @Override
     public ScheduleResponseDto saveSchedule(ScheduleRequestDto requestDto) {
 
-        Schedule schedule = new Schedule(requestDto.getScheduleId(), requestDto.getWriter(),requestDto.getContent());
+        Schedule schedule = new Schedule(requestDto.getScheduleId(), requestDto.getUserId(), requestDto.getPassword(), requestDto.getWriter(),requestDto.getContent(),requestDto.getUpdate_date());
 
         return scheduleRepository.saveSchedule(schedule);
 
@@ -40,7 +40,6 @@ public class ScheduleServiceImpl implements ScheduleService {
 
         return new ScheduleResponseDto(schedule);
     }
-
 
     @Transactional
     @Override
@@ -62,13 +61,21 @@ public class ScheduleServiceImpl implements ScheduleService {
         return new ScheduleResponseDto(schedule);
     }
         @Override
-        public void deleteSchedule(Long scheduleId){
+        public void deleteSchedule(Long scheduleId, String password){
+            ScheduleResponseDto responseDto = findScheduleById(scheduleId);
+            System.out.println(password);
+            if(responseDto.getPassword().equals(password) ) {
+                int deleteRow = scheduleRepository.deleteSchedule(scheduleId);
 
-            int deleteRow = scheduleRepository.deleteSchedule(scheduleId);
-
-            if(deleteRow == 0) {
-                throw new ResponseStatusException(HttpStatus.NOT_FOUND,scheduleId +"가 존재하지 않습니다.");
+                if(deleteRow == 0) {
+                    throw new ResponseStatusException(HttpStatus.NOT_FOUND,scheduleId +"가 존재하지 않습니다.");
+                }
             }
+            else{
+                throw new ResponseStatusException(HttpStatus.NOT_FOUND,"옳바르지 않은 비밀번호입니다.");
+            }
+
+
         }
 
     }

@@ -35,6 +35,7 @@ public class ScheduleController {
        return new ResponseEntity<>(scheduleService.findScheduleById(scheduleId), HttpStatus.OK);
     }
 
+
     @PutMapping("/{scheduleId}")
     public ResponseEntity<ScheduleResponseDto> updateSchedule(
             @PathVariable Long scheduleId,
@@ -44,9 +45,9 @@ public class ScheduleController {
     }
 
     @DeleteMapping("/{scheduleId}")
-    public ResponseEntity<Void> deleteSchedule(@PathVariable Long scheduleId) {
+    public ResponseEntity<Void> deleteSchedule(@PathVariable Long scheduleId,@RequestBody String password) {
 
-       scheduleService.deleteSchedule(scheduleId);
+       scheduleService.deleteSchedule(scheduleId, password);
        return new ResponseEntity<>(HttpStatus.OK);
     }
 

@@ -13,7 +13,7 @@ public interface ScheduleRepository {
 
     List<ScheduleResponseDto> findAllSchedules();
 
-    Optional<Schedule> findScheduleById(Long scheduleId);
+
 
     Schedule findScheduleByScheduleIdByIdOrElseThrow(Long scheduleId);
 
